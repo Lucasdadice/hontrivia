@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)file:///C:/Users/lucas/Downloads/newerth_oracle_5.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Newerth Oracle — Guess the Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./Newerth Oracle — Guess the Hero_files/css2" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0705;
+    --bg-panel: #1a130c;
+    --bg-panel-2: #281c11;
+    --ink: #f5e8c8;
+    --ink-dim: #b09870;
+    --ink-faint: #6a5a40;
+    --gold: #f0b020;
+    --gold-bright: #ffd84a;
+    --rust: #ff6418;
+    --blood: #d11a1a;
+    --str: #ff5a2c;
+    --agi: #5fd840;
+    --int: #3aa8ff;
+    --border: #4a3820;
+    --shadow: 0 4px 24px rgba(0,0,0,0.6), 0 1px 0 rgba(232,220,196,0.04) inset;
+    --serif: 'Cormorant Garamond', 'Times New Roman', serif;
+    --display: 'UnifrakturCook', 'Cormorant Garamond', serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg-deep); color: var(--ink); font-family: var(--serif); min-height: 100vh; }
+  body {
+    background-image:
+      radial-gradient(ellipse at top, rgba(240,176,32,0.14), transparent 55%),
+      radial-gradient(ellipse at bottom, rgba(209,26,26,0.10), transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3CfeColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.04 0 0 0 0 0.03 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
+  .app { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  header { text-align: center; margin-bottom: 32px; position: relative; }
+  header::before, header::after {
+    content: ''; position: absolute; top: 50%; width: 22%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+  }
+  header::before { left: 4%; }
+  header::after { right: 4%; }
+  h1 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: 0.02em;
+    color: var(--gold-bright); line-height: 1;
+    text-shadow: 0 2px 0 #000, 0 0 40px rgba(255,216,74,0.45), 0 0 80px rgba(240,176,32,0.2);
+  }
+  .tag { font-family: var(--serif); font-style: italic; color: var(--ink-dim); margin-top: 8px; letter-spacing: 0.08em; font-size: 0.95rem; }
+
+  .modes { display: flex; gap: 0; justify-content: center; margin: 24px 0 28px; }
+  .mode-btn {
+    background: var(--bg-panel); color: var(--ink-dim); border: 1px solid var(--border);
+    font-family: var(--serif); font-size: 1rem; padding: 10px 22px; cursor: pointer;
+    letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s;
+  }
+  .mode-btn:first-child { border-radius: 2px 0 0 2px; border-right: 0; }
+  .mode-btn:last-child { border-radius: 0 2px 2px 0; }
+  .mode-btn.active { background: var(--gold); color: #1a1208; border-color: var(--gold); }
+  .mode-btn:hover:not(.active) { color: var(--ink); background: var(--bg-panel-2); }
+
+  .panel {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    box-shadow: var(--shadow); border-radius: 3px; padding: 28px;
+  }
+
+  /* Stats card */
+  .stat-card {
+    display: grid; gap: 18px;
+    background: linear-gradient(180deg, var(--bg-panel-2), var(--bg-panel));
+    border: 1px solid var(--border); border-radius: 3px;
+    padding: 28px 32px; box-shadow: var(--shadow);
+    position: relative;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    border: 1px solid rgba(200,160,75,0.12); margin: 6px; border-radius: 2px;
+  }
+  .stat-card-header {
+    text-align: center; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .stat-card-header .label {
+    font-family: var(--serif); color: var(--ink-dim); letter-spacing: 0.3em;
+    text-transform: uppercase; font-size: 0.75rem;
+  }
+  .stat-card-header .name {
+    font-family: var(--display); color: var(--gold-bright);
+    font-size: 1.8rem; letter-spacing: 0.04em; margin-top: 4px;
+  }
+
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; align-items: stretch;
+  }
+  .attr-stat {
+    background: var(--bg-deep); border: 1px solid var(--border);
+    border-top: 3px solid var(--ink-faint);
+    padding: 18px 12px 16px; border-radius: 2px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px; position: relative;
+  }
+  .attr-stat .k {
+    font-family: var(--serif); color: var(--ink-dim);
+    font-size: 0.78rem; letter-spacing: 0.25em; text-transform: uppercase;
+  }
+  .attr-stat .base {
+    font-family: var(--mono); color: var(--ink);
+    font-size: 2.6rem; font-weight: 700; line-height: 1;
+    margin-top: 2px;
+  }
+  .attr-stat .gain {
+    font-family: var(--mono); color: var(--ink-dim);
+    font-size: 1rem; font-weight: 500; letter-spacing: 0.05em;
+  }
+  .attr-stat .gain.unknown { color: var(--ink-faint); font-style: italic; font-family: var(--serif); font-size: 0.85rem; }
+  .attr-stat .base.masked { color: var(--ink-faint); font-family: var(--serif); font-style: italic; opacity: 0.5; }
+  .attr-stat.strength { border-top-color: var(--str); }
+  .attr-stat.strength .k { color: var(--str); }
+  .attr-stat.agility { border-top-color: var(--agi); }
+  .attr-stat.agility .k { color: var(--agi); }
+  .attr-stat.intelligence { border-top-color: var(--int); }
+  .attr-stat.intelligence .k { color: var(--int); }
+  .attr-stat.primary {
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), var(--bg-deep));
+    box-shadow: 0 0 0 1px currentColor inset;
+  }
+  .attr-stat.primary.strength { box-shadow: 0 0 0 1px var(--str) inset, 0 0 18px rgba(255,90,44,0.15); }
+  .attr-stat.primary.agility  { box-shadow: 0 0 0 1px var(--agi) inset, 0 0 18px rgba(95,216,64,0.15); }
+  .attr-stat.primary.intelligence { box-shadow: 0 0 0 1px var(--int) inset, 0 0 18px rgba(58,168,255,0.15); }
+  .attr-stat.primary .base { color: #fff; }
+
+  .speed-stat {
+    margin-top: 10px;
+    background: var(--bg-deep); border: 1px solid var(--border);
+    padding: 8px 14px; border-radius: 2px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .speed-stat .k {
+    font-family: var(--serif); color: var(--gold);
+    font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .speed-stat .v {
+    font-family: var(--mono); color: var(--gold-bright);
+    font-size: 1.1rem; font-weight: 600;
+  }
+
+  .damage-stat {
+    margin-top: 8px;
+    background: var(--bg-deep); border: 1px solid var(--border);
+    border-left: 3px solid var(--rust);
+    padding: 8px 14px; border-radius: 2px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    animation: damage-reveal 0.3s ease-out;
+  }
+  .damage-stat.hidden { display: none; }
+  .damage-stat .k {
+    font-family: var(--serif); color: var(--rust);
+    font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .damage-stat .v {
+    font-family: var(--mono); color: var(--ink);
+    font-size: 1.1rem; font-weight: 600;
+  }
+  @keyframes damage-reveal {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .primary-tag {
+    display: none;
+  }
+
+  /* Easy mode choices */
+  .choices {
+    margin-top: 28px; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+  }
+  .choice {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    padding: 14px 12px; cursor: pointer; border-radius: 2px;
+    font-family: var(--serif); font-size: 1.1rem; color: var(--ink);
+    transition: all 0.15s; position: relative;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .choice:hover:not(.disabled) {
+    border-color: var(--gold); background: var(--bg-panel-2);
+    transform: translateY(-1px);
+  }
+  .choice.correct { border-color: var(--agi); background: rgba(95,216,64,0.18); color: #d4ffc4; box-shadow: 0 0 20px rgba(95,216,64,0.25); }
+  .choice.wrong { border-color: var(--blood); background: rgba(209,26,26,0.22); color: #ffc8c8; box-shadow: 0 0 20px rgba(209,26,26,0.25); }
+  .choice.reveal { border-color: var(--gold-bright); background: rgba(255,216,74,0.15); box-shadow: 0 0 20px rgba(255,216,74,0.25); }
+  .choice.disabled { cursor: not-allowed; }
+  .choice .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .choice .dot.strength { background: var(--str); }
+  .choice .dot.agility { background: var(--agi); }
+  .choice .dot.intelligence { background: var(--int); }
+
+  /* Hard mode search */
+  .search-wrap { margin-top: 28px; position: relative; }
+  .search-input {
+    width: 100%; background: var(--bg-deep); color: var(--ink);
+    border: 1px solid var(--border); padding: 14px 18px;
+    font-family: var(--serif); font-size: 1.15rem;
+    border-radius: 2px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--gold); }
+  .search-input::placeholder { color: var(--ink-faint); font-style: italic; }
+  .search-results {
+    margin-top: 8px; max-height: 280px; overflow-y: auto;
+    border: 1px solid var(--border); background: var(--bg-panel);
+  }
+  .search-results:empty { display: none; }
+  .search-result {
+    padding: 10px 16px; cursor: pointer; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--serif); font-size: 1.05rem;
+  }
+  .search-result:last-child { border-bottom: 0; }
+  .search-result:hover, .search-result.highlight {
+    background: var(--bg-panel-2); color: var(--gold-bright);
+  }
+  .search-result .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .search-result .dot.strength { background: var(--str); }
+  .search-result .dot.agility { background: var(--agi); }
+  .search-result .dot.intelligence { background: var(--int); }
+  .search-hint {
+    margin-top: 6px; font-size: 0.85rem; color: var(--ink-dim);
+    font-style: italic; text-align: right;
+  }
+
+  /* Verdict */
+  .verdict {
+    margin-top: 24px; text-align: center; min-height: 70px;
+    font-family: var(--display); font-size: 1.6rem;
+  }
+  .verdict.right { color: var(--agi); }
+  .verdict.wrong { color: var(--rust); }
+  .verdict .sub {
+    display: block; font-family: var(--serif); font-style: italic;
+    font-size: 1rem; color: var(--ink-dim); margin-top: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Score bar */
+  .scorebar {
+    display: flex; gap: 20px; justify-content: center; align-items: center;
+    margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .score-pill {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    padding: 8px 18px; border-radius: 2px;
+    font-family: var(--mono); font-size: 0.9rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .score-pill .label { color: var(--ink-dim); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.7rem; }
+  .score-pill .val { color: var(--gold-bright); font-weight: 700; font-size: 1.1rem; }
+
+  /* Buttons */
+  .btn {
+    background: transparent; border: 1px solid var(--gold); color: var(--gold-bright);
+    font-family: var(--serif); font-size: 1rem; padding: 10px 22px;
+    cursor: pointer; letter-spacing: 0.15em; text-transform: uppercase;
+    border-radius: 2px; transition: all 0.2s;
+  }
+  .btn:hover { background: var(--gold); color: #1a1208; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn:disabled:hover { background: transparent; color: var(--gold-bright); }
+  .btn.ghost { border-color: var(--border); color: var(--ink-dim); }
+  .btn.ghost:hover { border-color: var(--ink-dim); color: var(--ink); background: transparent; }
+  .btn.ghost:disabled:hover { border-color: var(--border); color: var(--ink-dim); }
+  .btn-row { display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+
+  /* Footer */
+  footer {
+    text-align: center; margin-top: 40px; color: var(--ink-faint);
+    font-size: 0.8rem; font-style: italic; letter-spacing: 0.1em;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 2.2rem; }
+    .stat-card { padding: 20px; }
+    .attr-stat .base { font-size: 2.1rem; }
+    .attr-stat { padding: 14px 8px 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Newerth Oracle</h1>
+    <div class="tag">— test your newerth knowledge —</div>
+  </header>
+
+  <div class="modes" id="modes">
+    <button class="mode-btn active" data-view="game" data-mode="easy">Easy</button>
+    <button class="mode-btn" data-view="game" data-mode="hard">Hard</button>
+  </div>
+
+  <!-- GAME VIEW -->
+  <section class="view-section active" id="view-game">
+    <div class="scorebar">
+      <div class="score-pill"><span class="label">Score</span><span class="val" id="score">0</span></div>
+      <div class="score-pill"><span class="label">Streak</span><span class="val" id="streak">0</span></div>
+      <div class="score-pill"><span class="label">Best</span><span class="val" id="best">0</span></div>
+    </div>
+
+    <div class="stat-card" id="stat-card">
+      <div class="stat-card-header">
+        <div class="label">Hero Codex — Level 1</div>
+        <div class="name" id="codex-name">???</div>
+      </div>
+      <div class="stat-grid" id="stat-grid"><div class="attr-stat strength">
+              <span class="k">Strength</span>
+              <span class="base">20</span>
+              <span class="gain">+ 1.7</span>
+            </div><div class="attr-stat agility">
+              <span class="k">Agility</span>
+              <span class="base">15</span>
+              <span class="gain">+ 1.6</span>
+            </div><div class="attr-stat intelligence">
+              <span class="k">Intelligence</span>
+              <span class="base">28</span>
+              <span class="gain">+ 2.3</span>
+            </div></div>
+      <div class="speed-stat">
+        <span class="k">Move Speed</span>
+        <span class="v" id="speed-value">300</span>
+      </div>
+      <div class="damage-stat hidden" id="damage-stat">
+        <span class="k">Starting Damage</span>
+        <span class="v" id="damage-value">48 – 52</span>
+      </div>
+    </div>
+
+    <!-- Easy mode choices -->
+    <div class="choices" id="choices" style="display: grid;"><div class="choice" data-id="1631">
+       <span>Prophet</span>
+     </div><div class="choice" data-id="1436">
+       <span>Nymphora</span>
+     </div><div class="choice" data-id="1743">
+       <span>Riftwalker</span>
+     </div><div class="choice" data-id="1339">
+       <span>Monarch</span>
+     </div><div class="choice" data-id="741">
+       <span>Empath</span>
+     </div></div>
+
+    <!-- Hard mode search -->
+    <div class="search-wrap" id="search-wrap" style="display: none;">
+      <input type="text" class="search-input" id="search-input" placeholder="Speak a name..." autocomplete="off" spellcheck="false">
+      <div class="search-results" id="search-results"></div>
+      <div class="search-hint" id="search-hint">99 heroes</div>
+    </div>
+
+    <div class="verdict" id="verdict"></div>
+
+    <div class="btn-row">
+      <button class="btn" id="next-btn">Next Hero →</button>
+      <button class="btn ghost" id="hint-btn" style="display: none;">Hint</button>
+      <button class="btn ghost" id="reveal-btn">Reveal</button>
+      <button class="btn ghost" id="reset-btn">Reset Score</button>
+    </div>
+  </section>
+
+  <footer>Data sourced from gamedata.juvio.com — for entertainment only.</footer>
+</div>
+
+<script>
+// ============ Hero data (embedded; may be replaced by Import JSON) ============
+let HEROES = [{"id":342,"name":"Accursed","primaryAttribute":"Strength","strength":23,"agility":17,"intelligence":26,"strengthPerLevel":2.7,"agilityPerLevel":1.5,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/342/icon.webp","attackDamageMin":54,"attackDamageMax":56},{"id":365,"name":"Aluna","primaryAttribute":"Intelligence","strength":16,"agility":18,"intelligence":22,"strengthPerLevel":2.0,"agilityPerLevel":1.8,"intelligencePerLevel":2.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":1,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/365/icon.webp","attackDamageMin":47,"attackDamageMax":53},{"id":391,"name":"Amun-Ra","primaryAttribute":"Strength","strength":24,"agility":15,"intelligence":10,"strengthPerLevel":3.0,"agilityPerLevel":1.5,"intelligencePerLevel":1.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/391/icon.webp","attackDamageMin":56,"attackDamageMax":62},{"id":410,"name":"Andromeda","primaryAttribute":"Agility","strength":18,"agility":25,"intelligence":16,"strengthPerLevel":2.5,"agilityPerLevel":2.2,"intelligencePerLevel":1.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/410/icon.webp","attackDamageMin":44,"attackDamageMax":52},{"id":431,"name":"Arachna","primaryAttribute":"Agility","strength":19,"agility":20,"intelligence":15,"strengthPerLevel":1.9,"agilityPerLevel":3.2,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":-1,"magicArmor":null,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/431/icon.webp","attackDamageMin":43,"attackDamageMax":46},{"id":446,"name":"Armadon","primaryAttribute":"Strength","strength":22,"agility":17,"intelligence":15,"strengthPerLevel":2.5,"agilityPerLevel":1.9,"intelligencePerLevel":2.2,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/446/icon.webp","attackDamageMin":52,"attackDamageMax":62},{"id":464,"name":"Behemoth","primaryAttribute":"Strength","strength":22,"agility":12,"intelligence":17,"strengthPerLevel":2.5,"agilityPerLevel":1.4,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/464/icon.webp","attackDamageMin":47,"attackDamageMax":54},{"id":480,"name":"Blacksmith","primaryAttribute":"Intelligence","strength":23,"agility":14,"intelligence":19,"strengthPerLevel":3.0,"agilityPerLevel":1.5,"intelligencePerLevel":2.1,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/480/icon.webp","attackDamageMin":56,"attackDamageMax":62},{"id":493,"name":"Blood Hunter","primaryAttribute":"Agility","strength":22,"agility":24,"intelligence":18,"strengthPerLevel":2.0,"agilityPerLevel":3.0,"intelligencePerLevel":1.7,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/493/icon.webp","attackDamageMin":53,"attackDamageMax":59},{"id":3209,"name":"Bombardier","primaryAttribute":"Intelligence","strength":18,"agility":16,"intelligence":24,"strengthPerLevel":1.9,"agilityPerLevel":1.4,"intelligencePerLevel":2.7,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/3209/icon.webp","attackDamageMin":44,"attackDamageMax":49},{"id":508,"name":"Bubbles","primaryAttribute":"Intelligence","strength":15,"agility":22,"intelligence":25,"strengthPerLevel":1.7,"agilityPerLevel":1.7,"intelligencePerLevel":2.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/508/icon.webp","attackDamageMin":45,"attackDamageMax":50},{"id":555,"name":"Chronos","primaryAttribute":"Agility","strength":22,"agility":20,"intelligence":15,"strengthPerLevel":1.5,"agilityPerLevel":3.0,"intelligencePerLevel":1.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/555/icon.webp","attackDamageMin":53,"attackDamageMax":59},{"id":578,"name":"Corrupted Disciple","primaryAttribute":"Agility","strength":19,"agility":22,"intelligence":19,"strengthPerLevel":1.9,"agilityPerLevel":2.8,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/578/icon.webp","attackDamageMin":47,"attackDamageMax":51},{"id":3858,"name":"Cthulhuphant","primaryAttribute":"Strength","strength":23,"agility":15,"intelligence":18,"strengthPerLevel":3.0,"agilityPerLevel":1.5,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/3858/icon.webp","attackDamageMin":51,"attackDamageMax":55},{"id":3766,"name":"Dampeer","primaryAttribute":"Agility","strength":21,"agility":24,"intelligence":16,"strengthPerLevel":2.0,"agilityPerLevel":2.9,"intelligencePerLevel":1.4,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/3766/icon.webp","attackDamageMin":51,"attackDamageMax":57},{"id":3661,"name":"Deadwood","primaryAttribute":"Strength","strength":25,"agility":16,"intelligence":16,"strengthPerLevel":2.7,"agilityPerLevel":1.5,"intelligencePerLevel":1.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/3661/icon.webp","attackDamageMin":56,"attackDamageMax":61},{"id":599,"name":"Defiler","primaryAttribute":"Intelligence","strength":23,"agility":18,"intelligence":20,"strengthPerLevel":1.8,"agilityPerLevel":1.4,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/599/icon.webp","attackDamageMin":45,"attackDamageMax":51},{"id":618,"name":"Demented Shaman","primaryAttribute":"Intelligence","strength":16,"agility":21,"intelligence":22,"strengthPerLevel":1.8,"agilityPerLevel":1.8,"intelligencePerLevel":2.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/618/icon.webp","attackDamageMin":48,"attackDamageMax":52},{"id":641,"name":"Devourer","primaryAttribute":"Strength","strength":25,"agility":14,"intelligence":14,"strengthPerLevel":3.0,"agilityPerLevel":1.5,"intelligencePerLevel":1.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":285,"icon":"https://gamestorage.juvio.com/heroes/641/icon.webp","attackDamageMin":52,"attackDamageMax":58},{"id":660,"name":"Doctor Repulsor","primaryAttribute":"Intelligence","strength":17,"agility":22,"intelligence":25,"strengthPerLevel":1.5,"agilityPerLevel":1.5,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":285,"icon":"https://gamestorage.juvio.com/heroes/660/icon.webp","attackDamageMin":50,"attackDamageMax":54},{"id":684,"name":"Drunken Master","primaryAttribute":"Strength","strength":22,"agility":14,"intelligence":18,"strengthPerLevel":3.0,"agilityPerLevel":2.0,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/684/icon.webp","attackDamageMin":50,"attackDamageMax":57},{"id":700,"name":"Electrician","primaryAttribute":"Strength","strength":23,"agility":13,"intelligence":25,"strengthPerLevel":2.4,"agilityPerLevel":2.0,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/700/icon.webp","attackDamageMin":53,"attackDamageMax":61},{"id":721,"name":"Ellonia","primaryAttribute":"Intelligence","strength":17,"agility":16,"intelligence":25,"strengthPerLevel":1.7,"agilityPerLevel":1.6,"intelligencePerLevel":3.2,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/721/icon.webp","attackDamageMin":41,"attackDamageMax":49},{"id":3880,"name":"Emerald Warden","primaryAttribute":"Agility","strength":17,"agility":22,"intelligence":18,"strengthPerLevel":1.7,"agilityPerLevel":2.8,"intelligencePerLevel":2.3,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":-1,"magicArmor":null,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/3880/icon.webp","attackDamageMin":44,"attackDamageMax":48},{"id":741,"name":"Empath","primaryAttribute":"Intelligence","strength":19,"agility":18,"intelligence":24,"strengthPerLevel":1.7,"agilityPerLevel":1.5,"intelligencePerLevel":2.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/741/icon.webp","attackDamageMin":46,"attackDamageMax":54},{"id":3588,"name":"Engineer","primaryAttribute":"Agility","strength":20,"agility":18,"intelligence":20,"strengthPerLevel":2.0,"agilityPerLevel":3.0,"intelligencePerLevel":2.1,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/3588/icon.webp","attackDamageMin":41,"attackDamageMax":48},{"id":765,"name":"Fayde","primaryAttribute":"Intelligence","strength":18,"agility":18,"intelligence":18,"strengthPerLevel":2.2,"agilityPerLevel":2.1,"intelligencePerLevel":2.3,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/765/icon.webp","attackDamageMin":46,"attackDamageMax":52},{"id":784,"name":"Flint Beastwood","primaryAttribute":"Agility","strength":18,"agility":21,"intelligence":17,"strengthPerLevel":1.7,"agilityPerLevel":2.9,"intelligencePerLevel":2.6,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/784/icon.webp","attackDamageMin":37,"attackDamageMax":44},{"id":805,"name":"Flux","primaryAttribute":"Strength","strength":23,"agility":21,"intelligence":18,"strengthPerLevel":3.2,"agilityPerLevel":2.0,"intelligencePerLevel":1.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/805/icon.webp","attackDamageMin":53,"attackDamageMax":56},{"id":830,"name":"Forsaken Archer","primaryAttribute":"Agility","strength":17,"agility":22,"intelligence":17,"strengthPerLevel":1.9,"agilityPerLevel":2.5,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":-1,"magicArmor":null,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/830/icon.webp","attackDamageMin":44,"attackDamageMax":50},{"id":860,"name":"Gauntlet","primaryAttribute":"Strength","strength":22,"agility":15,"intelligence":18,"strengthPerLevel":2.9,"agilityPerLevel":1.4,"intelligencePerLevel":2.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/860/icon.webp","attackDamageMin":53,"attackDamageMax":55},{"id":938,"name":"Gemini","primaryAttribute":"Agility","strength":19,"agility":21,"intelligence":17,"strengthPerLevel":2.6,"agilityPerLevel":2.6,"intelligencePerLevel":2.6,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/938/icon.webp","attackDamageMin":45,"attackDamageMax":50},{"id":963,"name":"Geomancer","primaryAttribute":"Intelligence","strength":18,"agility":16,"intelligence":22,"strengthPerLevel":2.0,"agilityPerLevel":1.2,"intelligencePerLevel":2.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/963/icon.webp","attackDamageMin":47,"attackDamageMax":55},{"id":982,"name":"Glacius","primaryAttribute":"Intelligence","strength":18,"agility":17,"intelligence":24,"strengthPerLevel":1.6,"agilityPerLevel":1.6,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/982/icon.webp","attackDamageMin":46,"attackDamageMax":54},{"id":3121,"name":"Gunblade","primaryAttribute":"Agility","strength":19,"agility":22,"intelligence":14,"strengthPerLevel":2.2,"agilityPerLevel":2.8,"intelligencePerLevel":1.7,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":310,"icon":"https://gamestorage.juvio.com/heroes/3121/icon.webp","attackDamageMin":45,"attackDamageMax":51},{"id":1025,"name":"Hammerstorm","primaryAttribute":"Strength","strength":22,"agility":20,"intelligence":15,"strengthPerLevel":2.8,"agilityPerLevel":2.0,"intelligencePerLevel":1.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1025/icon.webp","attackDamageMin":59,"attackDamageMax":62},{"id":1052,"name":"Hellbringer","primaryAttribute":"Intelligence","strength":17,"agility":12,"intelligence":20,"strengthPerLevel":2.2,"agilityPerLevel":1.4,"intelligencePerLevel":2.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/1052/icon.webp","attackDamageMin":49,"attackDamageMax":55},{"id":1077,"name":"Jeraziah","primaryAttribute":"Strength","strength":20,"agility":15,"intelligence":17,"strengthPerLevel":2.5,"agilityPerLevel":1.5,"intelligencePerLevel":1.7,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1077/icon.webp","attackDamageMin":51,"attackDamageMax":61},{"id":1098,"name":"Keeper of the Forest","primaryAttribute":"Strength","strength":25,"agility":15,"intelligence":17,"strengthPerLevel":3.3,"agilityPerLevel":1.7,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1098/icon.webp","attackDamageMin":57,"attackDamageMax":65},{"id":3797,"name":"Kinesis","primaryAttribute":"Intelligence","strength":20,"agility":15,"intelligence":30,"strengthPerLevel":1.6,"agilityPerLevel":1.5,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/3797/icon.webp","attackDamageMin":51,"attackDamageMax":55},{"id":3149,"name":"King Klout","primaryAttribute":"Strength","strength":22,"agility":14,"intelligence":22,"strengthPerLevel":2.5,"agilityPerLevel":1.5,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/3149/icon.webp","attackDamageMin":48,"attackDamageMax":52},{"id":1156,"name":"Kraken","primaryAttribute":"Strength","strength":22,"agility":15,"intelligence":18,"strengthPerLevel":2.8,"agilityPerLevel":1.5,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1156/icon.webp","attackDamageMin":47,"attackDamageMax":53},{"id":1174,"name":"Legionnaire","primaryAttribute":"Strength","strength":25,"agility":20,"intelligence":17,"strengthPerLevel":2.7,"agilityPerLevel":2.2,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/1174/icon.webp","attackDamageMin":49,"attackDamageMax":53},{"id":1195,"name":"Lodestone","primaryAttribute":"Strength","strength":25,"agility":17,"intelligence":19,"strengthPerLevel":3.2,"agilityPerLevel":1.2,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1195/icon.webp","attackDamageMin":52,"attackDamageMax":61},{"id":1227,"name":"Magebane","primaryAttribute":"Strength","strength":21,"agility":18,"intelligence":18,"strengthPerLevel":2.5,"agilityPerLevel":1.6,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":310,"icon":"https://gamestorage.juvio.com/heroes/1227/icon.webp","attackDamageMin":48,"attackDamageMax":52},{"id":1247,"name":"Magmus","primaryAttribute":"Strength","strength":24,"agility":19,"intelligence":16,"strengthPerLevel":2.5,"agilityPerLevel":2.1,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1247/icon.webp","attackDamageMin":50,"attackDamageMax":61},{"id":1264,"name":"Maliken","primaryAttribute":"Strength","strength":22,"agility":15,"intelligence":18,"strengthPerLevel":3.2,"agilityPerLevel":1.5,"intelligencePerLevel":1.7,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1264/icon.webp","attackDamageMin":49,"attackDamageMax":55},{"id":1281,"name":"Martyr","primaryAttribute":"Intelligence","strength":21,"agility":14,"intelligence":22,"strengthPerLevel":2.5,"agilityPerLevel":1.4,"intelligencePerLevel":2.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1281/icon.webp","attackDamageMin":50,"attackDamageMax":54},{"id":3681,"name":"Master Of Arms","primaryAttribute":"Agility","strength":16,"agility":21,"intelligence":16,"strengthPerLevel":2.0,"agilityPerLevel":2.2,"intelligencePerLevel":2.4,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/3681/icon.webp","attackDamageMin":40,"attackDamageMax":46},{"id":1310,"name":"Midas","primaryAttribute":"Intelligence","strength":20,"agility":12,"intelligence":22,"strengthPerLevel":2.0,"agilityPerLevel":1.2,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1310/icon.webp","attackDamageMin":50,"attackDamageMax":56},{"id":1339,"name":"Monarch","primaryAttribute":"Intelligence","strength":20,"agility":15,"intelligence":28,"strengthPerLevel":1.7,"agilityPerLevel":1.6,"intelligencePerLevel":2.3,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1339/icon.webp","attackDamageMin":44,"attackDamageMax":50},{"id":1371,"name":"Monkey King","primaryAttribute":"Agility","strength":20,"agility":20,"intelligence":17,"strengthPerLevel":1.9,"agilityPerLevel":2.5,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":null,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1371/icon.webp","attackDamageMin":47,"attackDamageMax":53},{"id":1380,"name":"Moon Queen","primaryAttribute":"Agility","strength":17,"agility":20,"intelligence":16,"strengthPerLevel":2.2,"agilityPerLevel":3.2,"intelligencePerLevel":1.9,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":null,"moveSpeed":320,"icon":"https://gamestorage.juvio.com/heroes/1380/icon.webp","attackDamageMin":48,"attackDamageMax":54},{"id":1394,"name":"Moraxus","primaryAttribute":"Strength","strength":26,"agility":13,"intelligence":16,"strengthPerLevel":2.8,"agilityPerLevel":1.3,"intelligencePerLevel":1.7,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1394/icon.webp","attackDamageMin":50,"attackDamageMax":56},{"id":1417,"name":"Myrmidon","primaryAttribute":"Intelligence","strength":19,"agility":15,"intelligence":26,"strengthPerLevel":1.8,"agilityPerLevel":1.2,"intelligencePerLevel":2.9,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/1417/icon.webp","attackDamageMin":50,"attackDamageMax":57},{"id":3159,"name":"Night Hound","primaryAttribute":"Agility","strength":17,"agility":24,"intelligence":16,"strengthPerLevel":2.0,"agilityPerLevel":2.5,"intelligencePerLevel":1.3,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/3159/icon.webp","attackDamageMin":48,"attackDamageMax":52},{"id":3266,"name":"Nomad","primaryAttribute":"Agility","strength":18,"agility":22,"intelligence":20,"strengthPerLevel":2.0,"agilityPerLevel":3.0,"intelligencePerLevel":2.2,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":310,"icon":"https://gamestorage.juvio.com/heroes/3266/icon.webp","attackDamageMin":54,"attackDamageMax":58},{"id":1436,"name":"Nymphora","primaryAttribute":"Intelligence","strength":16,"agility":18,"intelligence":28,"strengthPerLevel":1.7,"agilityPerLevel":1.2,"intelligencePerLevel":2.7,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1436/icon.webp","attackDamageMin":43,"attackDamageMax":50},{"id":1451,"name":"Ophelia","primaryAttribute":"Intelligence","strength":20,"agility":15,"intelligence":21,"strengthPerLevel":1.8,"agilityPerLevel":2.0,"intelligencePerLevel":2.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1451/icon.webp","attackDamageMin":45,"attackDamageMax":51},{"id":1477,"name":"Pandamonium","primaryAttribute":"Strength","strength":25,"agility":17,"intelligence":17,"strengthPerLevel":3.0,"agilityPerLevel":1.7,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/1477/icon.webp","attackDamageMin":50,"attackDamageMax":59},{"id":1504,"name":"Pearl","primaryAttribute":"Intelligence","strength":17,"agility":17,"intelligence":25,"strengthPerLevel":1.7,"agilityPerLevel":1.8,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":1,"magicArmor":5,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/1504/icon.webp","attackDamageMin":46,"attackDamageMax":54},{"id":1526,"name":"Pebbles","primaryAttribute":"Strength","strength":24,"agility":10,"intelligence":17,"strengthPerLevel":3.0,"agilityPerLevel":1.0,"intelligencePerLevel":1.6,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":285,"icon":"https://gamestorage.juvio.com/heroes/1526/icon.webp","attackDamageMin":61,"attackDamageMax":67},{"id":1542,"name":"Pestilence","primaryAttribute":"Strength","strength":24,"agility":17,"intelligence":15,"strengthPerLevel":2.6,"agilityPerLevel":2.0,"intelligencePerLevel":1.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1542/icon.webp","attackDamageMin":51,"attackDamageMax":59},{"id":1570,"name":"Pharaoh","primaryAttribute":"Strength","strength":26,"agility":13,"intelligence":19,"strengthPerLevel":3.0,"agilityPerLevel":1.2,"intelligencePerLevel":1.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/1570/icon.webp","attackDamageMin":7,"attackDamageMax":59},{"id":1589,"name":"Plague Rider","primaryAttribute":"Intelligence","strength":19,"agility":15,"intelligence":20,"strengthPerLevel":1.6,"agilityPerLevel":1.8,"intelligencePerLevel":3.3,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1589/icon.webp","attackDamageMin":44,"attackDamageMax":53},{"id":1603,"name":"Pollywog Priest","primaryAttribute":"Intelligence","strength":21,"agility":14,"intelligence":22,"strengthPerLevel":2.0,"agilityPerLevel":1.6,"intelligencePerLevel":2.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/1603/icon.webp","attackDamageMin":44,"attackDamageMax":50},{"id":3227,"name":"Predator","primaryAttribute":"Strength","strength":22,"agility":18,"intelligence":15,"strengthPerLevel":2.5,"agilityPerLevel":1.8,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":1,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/3227/icon.webp","attackDamageMin":52,"attackDamageMax":61},{"id":1631,"name":"Prophet","primaryAttribute":"Intelligence","strength":20,"agility":20,"intelligence":27,"strengthPerLevel":1.8,"agilityPerLevel":2.0,"intelligencePerLevel":2.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1631/icon.webp","attackDamageMin":49,"attackDamageMax":57},{"id":1653,"name":"Puppet Master","primaryAttribute":"Intelligence","strength":18,"agility":20,"intelligence":21,"strengthPerLevel":1.9,"agilityPerLevel":2.0,"intelligencePerLevel":3.1,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/1653/icon.webp","attackDamageMin":49,"attackDamageMax":57},{"id":1668,"name":"Pyromancer","primaryAttribute":"Intelligence","strength":18,"agility":16,"intelligence":24,"strengthPerLevel":1.5,"agilityPerLevel":1.5,"intelligencePerLevel":3.2,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/1668/icon.webp","attackDamageMin":46,"attackDamageMax":50},{"id":1701,"name":"Rampage","primaryAttribute":"Strength","strength":24,"agility":17,"intelligence":15,"strengthPerLevel":2.5,"agilityPerLevel":1.9,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1701/icon.webp","attackDamageMin":45,"attackDamageMax":55},{"id":3739,"name":"Ravenor","primaryAttribute":"Strength","strength":23,"agility":17,"intelligence":21,"strengthPerLevel":3.0,"agilityPerLevel":1.5,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":310,"icon":"https://gamestorage.juvio.com/heroes/3739/icon.webp","attackDamageMin":48,"attackDamageMax":56},{"id":3720,"name":"Revenant","primaryAttribute":"Intelligence","strength":18,"agility":21,"intelligence":23,"strengthPerLevel":1.8,"agilityPerLevel":2.0,"intelligencePerLevel":2.7,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":1,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/3720/icon.webp","attackDamageMin":53,"attackDamageMax":56},{"id":1721,"name":"Rhapsody","primaryAttribute":"Intelligence","strength":20,"agility":17,"intelligence":28,"strengthPerLevel":1.8,"agilityPerLevel":1.7,"intelligencePerLevel":2.4,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/1721/icon.webp","attackDamageMin":50,"attackDamageMax":54},{"id":1743,"name":"Riftwalker","primaryAttribute":"Intelligence","strength":20,"agility":16,"intelligence":25,"strengthPerLevel":2.1,"agilityPerLevel":1.2,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1743/icon.webp","attackDamageMin":47,"attackDamageMax":52},{"id":3835,"name":"Riptide","primaryAttribute":"Agility","strength":18,"agility":22,"intelligence":15,"strengthPerLevel":2.0,"agilityPerLevel":2.0,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":null,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/3835/icon.webp","attackDamageMin":48,"attackDamageMax":52},{"id":1778,"name":"Sand Wraith","primaryAttribute":"Agility","strength":17,"agility":20,"intelligence":16,"strengthPerLevel":2.5,"agilityPerLevel":2.0,"intelligencePerLevel":1.9,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/1778/icon.webp","attackDamageMin":43,"attackDamageMax":47},{"id":1800,"name":"Scout","primaryAttribute":"Agility","strength":20,"agility":21,"intelligence":16,"strengthPerLevel":1.7,"agilityPerLevel":3.0,"intelligencePerLevel":1.6,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":310,"icon":"https://gamestorage.juvio.com/heroes/1800/icon.webp","attackDamageMin":50,"attackDamageMax":54},{"id":1832,"name":"Silhouette","primaryAttribute":"Agility","strength":16,"agility":23,"intelligence":21,"strengthPerLevel":1.8,"agilityPerLevel":2.8,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/1832/icon.webp","attackDamageMin":41,"attackDamageMax":46},{"id":1851,"name":"Sir Benzington","primaryAttribute":"Agility","strength":20,"agility":20,"intelligence":17,"strengthPerLevel":2.0,"agilityPerLevel":2.7,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1851/icon.webp","attackDamageMin":47,"attackDamageMax":56},{"id":1868,"name":"Slither","primaryAttribute":"Agility","strength":18,"agility":22,"intelligence":18,"strengthPerLevel":1.9,"agilityPerLevel":2.6,"intelligencePerLevel":1.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":1,"magicArmor":5,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/1868/icon.webp","attackDamageMin":49,"attackDamageMax":51},{"id":1918,"name":"Solstice","primaryAttribute":"Strength","strength":25,"agility":18,"intelligence":16,"strengthPerLevel":2.8,"agilityPerLevel":2.0,"intelligencePerLevel":1.6,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":310,"icon":"https://gamestorage.juvio.com/heroes/1918/icon.webp","attackDamageMin":51,"attackDamageMax":55},{"id":1952,"name":"Soul Reaper","primaryAttribute":"Intelligence","strength":20,"agility":16,"intelligence":22,"strengthPerLevel":2.0,"agilityPerLevel":1.7,"intelligencePerLevel":2.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/1952/icon.webp","attackDamageMin":44,"attackDamageMax":48},{"id":1935,"name":"Soulstealer","primaryAttribute":"Agility","strength":16,"agility":20,"intelligence":18,"strengthPerLevel":2.2,"agilityPerLevel":3.2,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":5,"moveSpeed":310,"icon":"https://gamestorage.juvio.com/heroes/1935/icon.webp","attackDamageMin":35,"attackDamageMax":41},{"id":1975,"name":"Swiftblade","primaryAttribute":"Agility","strength":18,"agility":20,"intelligence":17,"strengthPerLevel":1.9,"agilityPerLevel":3.0,"intelligencePerLevel":1.3,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":null,"moveSpeed":310,"icon":"https://gamestorage.juvio.com/heroes/1975/icon.webp","attackDamageMin":44,"attackDamageMax":48},{"id":1998,"name":"Tempest","primaryAttribute":"Intelligence","strength":17,"agility":14,"intelligence":20,"strengthPerLevel":2.4,"agilityPerLevel":1.6,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1998/icon.webp","attackDamageMin":42,"attackDamageMax":48},{"id":532,"name":"The Chipper","primaryAttribute":"Intelligence","strength":19,"agility":20,"intelligence":25,"strengthPerLevel":1.6,"agilityPerLevel":1.5,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/532/icon.webp","attackDamageMin":45,"attackDamageMax":52},{"id":1010,"name":"The Gladiator","primaryAttribute":"Strength","strength":24,"agility":14,"intelligence":18,"strengthPerLevel":3.0,"agilityPerLevel":1.2,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1010/icon.webp","attackDamageMin":50,"attackDamageMax":60},{"id":1212,"name":"The Madman","primaryAttribute":"Agility","strength":18,"agility":23,"intelligence":16,"strengthPerLevel":2.1,"agilityPerLevel":2.8,"intelligencePerLevel":1.5,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":null,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/1212/icon.webp","attackDamageMin":47,"attackDamageMax":51},{"id":2013,"name":"Thunderbringer","primaryAttribute":"Intelligence","strength":16,"agility":11,"intelligence":23,"strengthPerLevel":2.0,"agilityPerLevel":1.2,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/2013/icon.webp","attackDamageMin":47,"attackDamageMax":49},{"id":2028,"name":"Torturer","primaryAttribute":"Intelligence","strength":18,"agility":21,"intelligence":26,"strengthPerLevel":1.8,"agilityPerLevel":1.5,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":5,"moveSpeed":315,"icon":"https://gamestorage.juvio.com/heroes/2028/icon.webp","attackDamageMin":49,"attackDamageMax":53},{"id":2067,"name":"Tundra","primaryAttribute":"Strength","strength":23,"agility":18,"intelligence":16,"strengthPerLevel":2.7,"agilityPerLevel":1.6,"intelligencePerLevel":1.9,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/2067/icon.webp","attackDamageMin":55,"attackDamageMax":65},{"id":2087,"name":"Valkyrie","primaryAttribute":"Agility","strength":18,"agility":21,"intelligence":18,"strengthPerLevel":1.9,"agilityPerLevel":2.6,"intelligencePerLevel":1.6,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":null,"moveSpeed":300,"icon":"https://gamestorage.juvio.com/heroes/2087/icon.webp","attackDamageMin":45,"attackDamageMax":49},{"id":2103,"name":"Vindicator","primaryAttribute":"Intelligence","strength":19,"agility":17,"intelligence":22,"strengthPerLevel":1.8,"agilityPerLevel":2.2,"intelligencePerLevel":2.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":290,"icon":"https://gamestorage.juvio.com/heroes/2103/icon.webp","attackDamageMin":46,"attackDamageMax":56},{"id":2123,"name":"Voodoo Jester","primaryAttribute":"Intelligence","strength":18,"agility":14,"intelligence":27,"strengthPerLevel":1.8,"agilityPerLevel":1.4,"intelligencePerLevel":3.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/2123/icon.webp","attackDamageMin":49,"attackDamageMax":55},{"id":2138,"name":"War Beast","primaryAttribute":"Strength","strength":24,"agility":16,"intelligence":15,"strengthPerLevel":2.7,"agilityPerLevel":1.4,"intelligencePerLevel":1.6,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/2138/icon.webp","attackDamageMin":53,"attackDamageMax":57},{"id":2152,"name":"Witch Slayer","primaryAttribute":"Intelligence","strength":16,"agility":16,"intelligence":25,"strengthPerLevel":1.7,"agilityPerLevel":1.5,"intelligencePerLevel":2.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/2152/icon.webp","attackDamageMin":44,"attackDamageMax":50},{"id":2164,"name":"Wretched Hag","primaryAttribute":"Intelligence","strength":16,"agility":19,"intelligence":25,"strengthPerLevel":1.7,"agilityPerLevel":2.5,"intelligencePerLevel":2.8,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":null,"magicArmor":5,"moveSpeed":295,"icon":"https://gamestorage.juvio.com/heroes/2164/icon.webp","attackDamageMin":45,"attackDamageMax":52},{"id":2184,"name":"Zephyr","primaryAttribute":"Agility","strength":17,"agility":24,"intelligence":15,"strengthPerLevel":1.8,"agilityPerLevel":2.4,"intelligencePerLevel":2.0,"maxHealth":150,"maxMana":0,"healthRegen":null,"armor":0,"magicArmor":5,"moveSpeed":305,"icon":"https://gamestorage.juvio.com/heroes/2184/icon.webp","attackDamageMin":52,"attackDamageMax":58}];
+
+// ============ State ============
+const state = {
+  mode: 'easy',
+  current: null,
+  choices: [],
+  score: 0,
+  streak: 0,
+  best: 0,
+  answered: false,
+  searchHighlight: 0,
+};
+
+// ============ Utils ============
+const $ = (id) => document.getElementById(id);
+const fmt = (v) => (v === null || v === undefined) ? '—' : String(v);
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const randInt = (n) => Math.floor(Math.random() * n);
+const sample = (arr, k) => {
+  const copy = arr.slice();
+  const out = [];
+  for (let i = 0; i < k && copy.length; i++) {
+    const idx = randInt(copy.length);
+    out.push(copy.splice(idx, 1)[0]);
+  }
+  return out;
+};
+const shuffle = (arr) => {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = randInt(i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
+// ============ Render: stats card ============
+function renderStatCard(hero, revealName=false, hideBase=false) {
+  $('codex-name').textContent = revealName ? hero.name : '???';
+
+  const attrs = [
+    {k: 'Strength', base: hero.strength, gain: hero.strengthPerLevel, slug: 'strength'},
+    {k: 'Agility', base: hero.agility, gain: hero.agilityPerLevel, slug: 'agility'},
+    {k: 'Intelligence', base: hero.intelligence, gain: hero.intelligencePerLevel, slug: 'intelligence'},
+  ];
+  const grid = $('stat-grid');
+  grid.innerHTML = attrs.map(a => {
+    const cls = `attr-stat ${a.slug}${hideBase ? ' base-hidden' : ''}`;
+    const baseStr = (a.base === null || a.base === undefined) ? '—' : a.base;
+    const baseHtml = hideBase
+      ? `<span class="base masked">??</span>`
+      : `<span class="base">${baseStr}</span>`;
+    const gainHtml = (a.gain === null || a.gain === undefined)
+      ? '<span class="gain unknown">+ unset</span>'
+      : `<span class="gain">+ ${a.gain.toFixed(1)}</span>`;
+    return `<div class="${cls}">
+              <span class="k">${a.k}</span>
+              ${baseHtml}
+              ${gainHtml}
+            </div>`;
+  }).join('');
+
+  $('speed-value').textContent = (hero.moveSpeed === null || hero.moveSpeed === undefined) ? '—' : hero.moveSpeed;
+}
+
+// ============ Game flow ============
+function pickHero() {
+  return HEROES[randInt(HEROES.length)];
+}
+
+function buildEasyChoices(answer) {
+  // Pick 4 other heroes that share the answer's primary attribute, plus the answer itself.
+  const pool = HEROES.filter(h => h.primaryAttribute === answer.primaryAttribute && h.id !== answer.id);
+  const picks = sample(pool, 4);
+  picks.push(answer);
+  return shuffle(picks);
+}
+
+function newRound() {
+  state.answered = false;
+  state.current = pickHero();
+  $('verdict').textContent = '';
+  $('verdict').className = 'verdict';
+
+  // Reset hint state
+  $('damage-stat').classList.add('hidden');
+  $('hint-btn').disabled = false;
+  $('hint-btn').textContent = 'Hint';
+
+  // Hard mode hides the base attribute values until the round is resolved
+  const hideBase = state.mode === 'hard';
+  renderStatCard(state.current, false, hideBase);
+
+  // Hint button only useful in hard mode
+  $('hint-btn').style.display = state.mode === 'hard' ? '' : 'none';
+
+  if (state.mode === 'easy') {
+    state.choices = buildEasyChoices(state.current);
+    renderChoices();
+    $('search-wrap').style.display = 'none';
+    $('choices').style.display = 'grid';
+  } else {
+    $('choices').innerHTML = '';
+    $('choices').style.display = 'none';
+    $('search-wrap').style.display = 'block';
+    $('search-input').value = '';
+    $('search-input').disabled = false;
+    renderSearch('');
+    setTimeout(() => $('search-input').focus(), 0);
+  }
+}
+
+function renderChoices() {
+  const el = $('choices');
+  el.innerHTML = state.choices.map(h =>
+    `<div class="choice" data-id="${h.id}">
+       <span>${escapeHtml(h.name)}</span>
+     </div>`
+  ).join('');
+  el.querySelectorAll('.choice').forEach(c => {
+    c.addEventListener('click', () => {
+      if (state.answered) return;
+      const id = parseInt(c.dataset.id);
+      submitGuess(id);
+    });
+  });
+}
+
+function submitGuess(heroId) {
+  if (state.answered) return;
+  state.answered = true;
+  const correct = heroId === state.current.id;
+  if (correct) {
+    state.score++;
+    state.streak++;
+    if (state.streak > state.best) state.best = state.streak;
+    $('verdict').innerHTML = `Foretold!<span class="sub">It is indeed ${escapeHtml(state.current.name)}.</span>`;
+    $('verdict').className = 'verdict right';
+  } else {
+    state.streak = 0;
+    const guessed = HEROES.find(h => h.id === heroId);
+    $('verdict').innerHTML = `Astray.<span class="sub">You named ${escapeHtml(guessed.name)} — the answer was ${escapeHtml(state.current.name)}.</span>`;
+    $('verdict').className = 'verdict wrong';
+  }
+  updateScoreDisplay();
+  renderStatCard(state.current, true);
+  // Reveal damage too so the full stat block is visible at the end of the round
+  showDamage();
+
+  if (state.mode === 'easy') {
+    document.querySelectorAll('.choice').forEach(c => {
+      const id = parseInt(c.dataset.id);
+      c.classList.add('disabled');
+      if (id === state.current.id) c.classList.add('correct');
+      else if (id === heroId) c.classList.add('wrong');
+    });
+  } else {
+    $('search-input').disabled = true;
+    $('search-results').innerHTML = '';
+    $('search-hint').textContent = '';
+  }
+}
+
+function reveal() {
+  if (state.answered) return;
+  state.answered = true;
+  state.streak = 0;
+  $('verdict').innerHTML = `<span class="sub">The hero was <b style="color:var(--gold-bright)">${escapeHtml(state.current.name)}</b>.</span>`;
+  $('verdict').className = 'verdict';
+  updateScoreDisplay();
+  renderStatCard(state.current, true);
+  showDamage();
+  if (state.mode === 'easy') {
+    document.querySelectorAll('.choice').forEach(c => {
+      c.classList.add('disabled');
+      if (parseInt(c.dataset.id) === state.current.id) c.classList.add('reveal');
+    });
+  } else {
+    $('search-input').disabled = true;
+    $('search-results').innerHTML = '';
+    $('search-hint').textContent = '';
+  }
+}
+
+function updateScoreDisplay() {
+  $('score').textContent = state.score;
+  $('streak').textContent = state.streak;
+  $('best').textContent = state.best;
+}
+
+function showDamage() {
+  const h = state.current;
+  if (!h) return;
+  const dmgMin = h.attackDamageMin, dmgMax = h.attackDamageMax;
+  $('damage-value').textContent = (dmgMin != null && dmgMax != null) ? `${dmgMin} – ${dmgMax}` : '—';
+  $('damage-stat').classList.remove('hidden');
+}
+
+// ============ Hard-mode search ============
+function getMatches(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) return HEROES.slice();
+  // Substring match (forgiving). If user enters regex chars, treat as literal.
+  return HEROES.filter(h => h.name.toLowerCase().includes(q));
+}
+
+function renderSearch(query) {
+  const matches = getMatches(query);
+  state.searchMatches = matches;
+  state.searchHighlight = 0;
+  const results = $('search-results');
+  if (!query) {
+    results.innerHTML = '';
+    $('search-hint').textContent = `${matches.length} heroes`;
+    return;
+  }
+  results.innerHTML = matches.slice(0, 50).map((h, i) =>
+    `<div class="search-result ${i===0?'highlight':''}" data-id="${h.id}">
+       <span>${highlightMatch(h.name, query)}</span>
+     </div>`
+  ).join('');
+  results.querySelectorAll('.search-result').forEach(r => {
+    r.addEventListener('click', () => submitGuess(parseInt(r.dataset.id)));
+    r.addEventListener('mouseenter', () => {
+      results.querySelectorAll('.search-result').forEach(x => x.classList.remove('highlight'));
+      r.classList.add('highlight');
+      state.searchHighlight = Array.from(results.children).indexOf(r);
+    });
+  });
+  if (matches.length === 1) {
+    $('search-hint').textContent = `Press Enter to choose ${matches[0].name}`;
+  } else if (matches.length === 0) {
+    $('search-hint').textContent = 'No matches';
+  } else {
+    $('search-hint').textContent = `${matches.length} matches — ↑↓ to navigate, Enter to select`;
+  }
+}
+
+function highlightMatch(name, query) {
+  if (!query) return escapeHtml(name);
+  const re = new RegExp('(' + escapeRegex(query) + ')', 'i');
+  return escapeHtml(name).replace(re, '<b style="color:var(--gold-bright)">$1</b>');
+}
+
+// ============ Mode switching ============
+function setMode(mode) {
+  state.mode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+  newRound();
+}
+
+// ============ Wire up ============
+document.querySelectorAll('.mode-btn').forEach(b => {
+  b.addEventListener('click', () => setMode(b.dataset.mode));
+});
+
+$('next-btn').addEventListener('click', () => newRound());
+$('hint-btn').addEventListener('click', () => {
+  if (state.answered) return;
+  showDamage();
+  $('hint-btn').disabled = true;
+  $('hint-btn').textContent = 'Hint Used';
+});
+$('reveal-btn').addEventListener('click', () => reveal());
+$('reset-btn').addEventListener('click', () => {
+  state.score = 0; state.streak = 0; state.best = 0;
+  updateScoreDisplay();
+});
+
+$('search-input').addEventListener('input', (e) => renderSearch(e.target.value));
+$('search-input').addEventListener('keydown', (e) => {
+  const matches = state.searchMatches || [];
+  const results = $('search-results');
+  const items = results.querySelectorAll('.search-result');
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (matches.length === 1) {
+      submitGuess(matches[0].id);
+    } else if (items.length && state.searchHighlight >= 0 && state.searchHighlight < items.length) {
+      submitGuess(parseInt(items[state.searchHighlight].dataset.id));
+    }
+  } else if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (items.length) {
+      state.searchHighlight = Math.min(state.searchHighlight + 1, items.length - 1);
+      items.forEach(x => x.classList.remove('highlight'));
+      items[state.searchHighlight].classList.add('highlight');
+      items[state.searchHighlight].scrollIntoView({block: 'nearest'});
+    }
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (items.length) {
+      state.searchHighlight = Math.max(state.searchHighlight - 1, 0);
+      items.forEach(x => x.classList.remove('highlight'));
+      items[state.searchHighlight].classList.add('highlight');
+      items[state.searchHighlight].scrollIntoView({block: 'nearest'});
+    }
+  }
+});
+
+// ============ Boot ============
+updateScoreDisplay();
+newRound();
+</script>
+
+
+</body></html>
